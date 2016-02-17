@@ -3,7 +3,7 @@
 	include ('arrays_only.php');
 	include ('ranges.php');
 
-	$res = new ArrayGen (true, 2, 16);
+	$res = new ArrayGen (false, 2, 16);
 
 	echo "<hr/><b>Solution using arrays only</b><br/><hr/><br/>";
 
