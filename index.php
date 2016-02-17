@@ -1,14 +1,16 @@
 <?php
-	include('arrays_only.php');
-	include('ranges.php');
+	include ('generator.php');
+	include ('arrays_only.php');
+	include ('ranges.php');
 
+	$res = new ArrayGen (true, 2, 16);
 
 	echo "<hr/><b>Solution using arrays only</b><br/><hr/><br/>";
 
 	// start script execution timer
 	$time_start = microtime (true);
 
-	$sol1 = new ArraySol (true, 2, 16);
+	$sol1 = new ArraySol ($res->getArrays ());
 	$sol1->compareAndMerge ();
 
 	// Display Script End time
@@ -27,7 +29,7 @@
 	// start script execution timer
 	$time_start = microtime (true);
 
-	$sol2 = new ArrayRange (true, 2, 16);
+	$sol2 = new ArrayRange ($res->getArrays ());
 	$sol2->compareAndMerge ();
 
 	// Display Script End time
