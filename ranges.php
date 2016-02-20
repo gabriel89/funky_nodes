@@ -2,39 +2,38 @@
 	class ArrayRange {
 		public function __construct ($arrays) {
 	        $this->v1 = $this->determineRange ($arrays[0]);
-			// $this->v2 = $this->determineRange ($arrays[1]);
+			$this->v2 = $this->determineRange ($arrays[1]);
 	    }
 
 	    function determineRange ($array) {
-	    	// var_dump($array);
-	    	$array = $this->separateElements ($array);
-	    	// var_dump($array);
+	    	$array 		= $this->separateElements ($array);
+	    	$newArray 	=  array();
 
 	    	foreach ($array as $key => $values) {
-	    		$range 		= false; 
-	    		$start 		= $values[0];
-	    		$end 		= 0;
-	    		$newArray 	=  array();
+	    		$range 	= false; 
+	    		$start 	= $values[0];
 
-	    		for ($i=1; $i<sizeof($values)-1; $i++){
-	    			if ($values[$i+1] == $start + 1) {
+	    		for ($i = 0; $i < sizeof ($values) - 1; $i ++) {			
+	    			if (($values[$i] + 1) == $values[$i+1])
 	    				$range = true;
-	    				$end = $values[$i];
-	    			}
-	    			// } else {
-	    			// 	$start 	= $values[i];
-	    			// 	$end 	= 0;
-	    			// }
-
-	    			if ($range)
-	    				var_dump("Found range between $start and $end <br/>");
+	    			
+	    			else if ($range) {
+	    				array_push ($newArray, $key . '/' . $start . '-' . $values[$i]);
+	    				$start 	= $values[$i+1];
+	    				$range 	= false;
+	    			
+	    			} else
+	    				array_push ($newArray, $key . '/' . $values[$i]);
 	    		}
 
-	    		foreach ($values as $value) {
-	    			// var_dump($value);
-	    		}
-	    		// var_dump($value);
+	    		if ($range)
+    				array_push ($newArray, $key . '/' . $start . '-' . $values[$i]);
+    			else
+    				array_push ($newArray, $key . '/' . $values[$i]);
+
 	    	}
+	    	
+	    	return $newArray;
 	    }
 
 	    /**
@@ -62,34 +61,6 @@
 			return $grouped_array;
 		}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 		/**
 		* Reformats the two arrays in order to better compare each values and merges them
 		*
@@ -101,8 +72,8 @@
 		* @author Gabriel Barina <barinagabriel2007@yahoo.com>
 		*/
 		function compareAndMerge () {
-			// $this->printVector ('v1', $this->v1);
-			// $this->printVector ('v2', $this->v2);
+			$this->printVector ('v1', $this->v1);
+			$this->printVector ('v2', $this->v2);
 
 			// $this->v1 = $this->separateElements ($this->v1);
 			// $this->v2 = $this->separateElements ($this->v2);
@@ -111,6 +82,34 @@
 
 			// $this->printVector('v3', $v3);
 		}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 		/**
 		* Prints out the individual elements of the array using a custom format
