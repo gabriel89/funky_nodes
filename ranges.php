@@ -87,11 +87,11 @@
 			// in which case merge its elements into the existing values, if not, copy it to the other array as is
 			foreach ($v1 as $key => $value)	{
 				// key doesn't exist
-				if (!array_key_exists ($key , $v2))
+				if (!array_key_exists ($key , $v2)) {
 					$v2[$key] = $value;
 
 				// key exists, need to merge contents
-				else {
+				} else {
 					$v2_values = array();
 
 					// turn intervals into arrays for testing
@@ -100,11 +100,22 @@
 
 						array_push ($v2_values, (count ($local) < 2) ? $local : range ($local[0], $local[1]));
 					}
-
+					// var_dump($v2_values);
+					// print_r("<br/>======================22222222<br/>");
 					foreach ($v2_values as $v2_key => $v2_value) {
+						// var_dump($v2_value);
 						foreach ($value as $v1_key => $v1_value) {
 							// split possible intervals
 							$local = explode ('-', $v1_value);
+							// var_dump($local);
+
+							if (count ($local) < 2)
+								if  (is_array ($v1_value))
+									if (in_array ($local[0], $v1_value))
+										print_r("Found ".$local[0] . ' in '. $v1_value);
+
+							// var_dump($local);
+							// die();
 
 							// print_r("searching for ". json_encode($local) .' in '. json_encode($v2_value)."<br/>");
 
@@ -112,7 +123,6 @@
 
 
 					}
-
 				}
 
 			}
