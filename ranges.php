@@ -5,6 +5,15 @@
 			$this->v2 = $this->determineRange ($arrays[1]);
 	    }
 
+	    /**
+		* Helper method that transforms a regular array used as input-data into ranges
+		*
+		* @param $array - array - contains the elements of the array without ranges
+		*
+		* @return $newArray - array - contains the elements of the array but using ranges
+		*
+		* @author Gabriel Barina <barinagabriel2007@yahoo.com>
+		*/
 	    function determineRange ($array) {
 	    	$array 		= $this->separateElements ($array);
 	    	$newArray 	=  array();
@@ -26,11 +35,7 @@
 	    				array_push ($newArray, $key . '/' . $values[$i]);
 	    		}
 
-	    		if ($range)
-    				array_push ($newArray, $key . '/' . $start . '-' . $values[$i]);
-    			else
-    				array_push ($newArray, $key . '/' . $values[$i]);
-
+    			array_push ($newArray, $key . '/' . ($range ? $start . '-' : '') . $values[$i]);
 	    	}
 	    	
 	    	return $newArray;
@@ -62,6 +67,84 @@
 		}
 
 		/**
+		* Separates each of the array's keys and values and creates a union of these 
+		*
+		* @param $v1 - array - contains the elements of the first (shortest) array
+		* @param $v2 - array - contains the elements of the second array
+		*
+		* @return $v2 - array - contains the union of the first and second array's elements
+		*
+		* @author Gabriel Barina <barinagabriel2007@yahoo.com>
+		*/
+		function compareElements ($v1, $v2) {
+			print_r("<br/>======================<br/>");
+			var_dump($v1);
+			print_r("<br/>--------------------------<br/>");
+			var_dump($v2);
+			print_r("<br/>======================<br/>");
+
+			// cycle through each of the elements of the shortest array and check if an individual keys exists, 
+			// in which case merge its elements into the existing values, if not, copy it to the other array as is
+			foreach ($v1 as $key => $value)	{
+				// key doesn't exist
+				if (!array_key_exists ($key , $v2))
+					$v2[$key] = $value;
+
+				// key exists, need to merge contents
+				else {
+					$v2_values = array();
+
+					// turn intervals into arrays for testing
+					foreach ($v2[$key] as $v2_key => $v2_value) {
+						$local = explode ('-', $v2_value);
+
+						array_push ($v2_values, (count ($local) < 2) ? $local : range ($local[0], $local[1]));
+					}
+
+					foreach ($v2_values as $v2_key => $v2_value) {
+						foreach ($value as $v1_key => $v1_value) {
+							// split possible intervals
+							$local = explode ('-', $v1_value);
+
+							// print_r("searching for ". json_encode($local) .' in '. json_encode($v2_value)."<br/>");
+
+						}
+
+
+					}
+
+				}
+
+			}
+
+
+
+
+
+			// print_r("<br/>======================<br/>");
+			// var_dump($v2);
+			// print_r("<br/>======================<br/>");
+
+
+			return $v2;
+		}
+
+
+		/**
+		* Prints out the individual elements of the array using a custom format
+		*
+		* @param $name - string - contains the name of the array
+		* @param $elements - array - contains the elements of the array
+		*
+		* @return *
+		*
+		* @author Gabriel Barina <barinagabriel2007@yahoo.com>
+		*/
+		function printVector ($name, $elements) {
+			echo $name . ' = { ' . implode(', ', $elements) . " }<br/><br/>";
+		}
+
+		/**
 		* Reformats the two arrays in order to better compare each values and merges them
 		*
 		* @param $v1 - array - contains the elements of the first array
@@ -75,9 +158,9 @@
 			$this->printVector ('v1', $this->v1);
 			$this->printVector ('v2', $this->v2);
 
-			// $this->v1 = $this->separateElements ($this->v1);
-			// $this->v2 = $this->separateElements ($this->v2);
-			// $v3 = (count ($this->v2) > count ($this->v1)) ? $this->compareElements ($this->v1, $this->v2) : $this->compareElements ($this->v2, $this->v1);
+			$this->v1 = $this->separateElements ($this->v1);
+			$this->v2 = $this->separateElements ($this->v2);
+			$v3 = (count ($this->v2) > count ($this->v1)) ? $this->compareElements ($this->v1, $this->v2) : $this->compareElements ($this->v2, $this->v1);
 			// $v3 = $this->regroupElements ($v3);
 
 			// $this->printVector('v3', $v3);
@@ -111,40 +194,6 @@
 
 
 
-		/**
-		* Prints out the individual elements of the array using a custom format
-		*
-		* @param $name - string - contains the name of the array
-		* @param $elements - array - contains the elements of the array
-		*
-		* @return *
-		*
-		* @author Gabriel Barina <barinagabriel2007@yahoo.com>
-		*/
-		function printVector ($name, $elements) {
-			echo $name . ' = { ' . implode(', ', $elements) . " }<br/><br/>";
-		}
-
-
-
-		/**
-		* Separates each of the array's keys and values and creates a union of these 
-		*
-		* @param $v1 - array - contains the elements of the first (shortest) array
-		* @param $v2 - array - contains the elements of the second array
-		*
-		* @return $v2 - array - contains the union of the first and second array's elements
-		*
-		* @author Gabriel Barina <barinagabriel2007@yahoo.com>
-		*/
-		function compareElements ($v1, $v2) {
-			// cycle through each of the elements of the shortest array and check if an individual keys exists, 
-			// in which case merge its elements into the existing values, if not, copy it to the other array as is
-			foreach ($v1 as $key => $value)			
-				$v2[$key] = array_key_exists ($key , $v2) ? array_unique (array_merge ($v2[$key], $value)) : $value;
-
-			return $v2;
-		}
 
 		/**
 		* Function to re-sort and regroup each of the elements with their respective keys
